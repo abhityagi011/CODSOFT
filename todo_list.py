@@ -1,79 +1,60 @@
-# todo_list.py
+todo_list = []
 
-class ToDoList:
-    def __init__(self):
-        self.tasks = []
+def show_menu():
+    print("\n===== TO-DO LIST MENU =====")
+    print("1. View tasks")
+    print("2. Add task")
+    print("3. Remove task")
+    print("4. Mark task as completed")
+    print("5. Exit")
 
-    def add_task(self, task):
-        self.tasks.append({"task": task, "completed": False})
-        print(f"Task '{task}' added successfully!")
+def view_tasks():
+    if not todo_list:
+        print("Your to-do list is empty.")
+    else:
+        print("\nYour To-Do List:")
+        for index, task in enumerate(todo_list, start=1):
+            status = "✔️" if task["done"] else "❌"
+            print(f"{index}. [{status}] {task['task']}")
 
-    def view_tasks(self):
-        if not self.tasks:
-            print("No tasks found!")
-        else:
-            print("\nYour To-Do List:")
-            for i, task in enumerate(self.tasks, 1):
-                status = "✅ Completed" if task["completed"] else "❌ Not Completed"
-                print(f"{i}. {task['task']} - {status}")
+def add_task():
+    task_text = input("Enter the task: ")
+    todo_list.append({"task": task_text, "done": False})
+    print("Task added!")
 
-    def mark_completed(self, task_no):
-        if 0 < task_no <= len(self.tasks):
-            self.tasks[task_no - 1]["completed"] = True
-            print(f"Task {task_no} marked as completed!")
-        else:
-            print("Invalid task number!")
+def remove_task():
+    view_tasks()
+    try:
+        index = int(input("Enter the task number to remove: ")) - 1
+        removed = todo_list.pop(index)
+        print(f"Removed: {removed['task']}")
+    except (IndexError, ValueError):
+        print("Invalid task number.")
 
-    def delete_task(self, task_no):
-        if 0 < task_no <= len(self.tasks):
-            removed = self.tasks.pop(task_no - 1)
-            print(f"Task '{removed['task']}' deleted successfully!")
-        else:
-            print("Invalid task number!")
+def mark_completed():
+    view_tasks()
+    try:
+        index = int(input("Enter the task number to mark as completed: ")) - 1
+        todo_list[index]["done"] = True
+        print("Task marked as completed.")
+    except (IndexError, ValueError):
+        print("Invalid task number.")
 
-    def update_task(self, task_no, new_task):
-        if 0 < task_no <= len(self.tasks):
-            self.tasks[task_no - 1]["task"] = new_task
-            print(f"Task {task_no} updated successfully!")
-        else:
-            print("Invalid task number!")
+# Main loop
+while True:
+    show_menu()
+    choice = input("Enter your choice (1-5): ")
 
-
-def main():
-    todo = ToDoList()
-
-    while True:
-        print("\n===== TO-DO LIST MENU =====")
-        print("1. Add Task")
-        print("2. View Tasks")
-        print("3. Mark Task as Completed")
-        print("4. Update Task")
-        print("5. Delete Task")
-        print("6. Exit")
-
-        choice = input("Enter your choice (1-6): ")
-
-        if choice == "1":
-            task = input("Enter the task: ")
-            todo.add_task(task)
-        elif choice == "2":
-            todo.view_tasks()
-        elif choice == "3":
-            task_no = int(input("Enter task number to mark as completed: "))
-            todo.mark_completed(task_no)
-        elif choice == "4":
-            task_no = int(input("Enter task number to update: "))
-            new_task = input("Enter new task: ")
-            todo.update_task(task_no, new_task)
-        elif choice == "5":
-            task_no = int(input("Enter task number to delete: "))
-            todo.delete_task(task_no)
-        elif choice == "6":
-            print("Exiting... Goodbye!")
-            break
-        else:
-            print("Invalid choice! Please try again.")
-
-
-if __name__ == "__main__":
-    main()
+    if choice == '1':
+        view_tasks()
+    elif choice == '2':
+        add_task()
+    elif choice == '3':
+        remove_task()
+    elif choice == '4':
+        mark_completed()
+    elif choice == '5':
+        print("Goodbye!")
+        break
+    else:
+        print("Invalid choice. Please try again.")
